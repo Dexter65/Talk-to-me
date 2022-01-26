@@ -33,22 +33,17 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            if (messageInput.hasNext()) {
-                try {
-                    Message message = JSONMessageParser.getMessageFromJSON(messageInput.nextLine());
-
-                    if (message.getStatusCode() == 0) {
-                        server.sendMessageToChat(new Message("Клиент отключился"));
-                        break;
-                    }
-
-                    server.sendMessageToChat(message);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        while (messageInput.hasNext()) {
+            try {
+                Message message = JSONMessageParser.getMessageFromJSON(messageInput.nextLine());
+                server.sendMessageToChat(message);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
+
+        ServerData.clients.remove(this); // may break because there is no synchronization
+        server.sendMessageToChat(new Message("Клиент отключился"));
     }
 
 }
