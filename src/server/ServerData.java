@@ -12,8 +12,9 @@ public class ServerData {
     private static String host = "localhost";
     private static int port = 3443;
     private static String name = "Talk to me";
-    private static String startServerMessage = "Сервер был успешно запущен!";
-    private static String endServerMessage = "Сервер был остановлен!";
+    private static String startServerMessage = "The server has been successfully started!";
+    private static String endServerMessage = "The server has been stopped!";
+    private static String welcomeServerMessage = "A new member has joined the chat!";
     private static boolean isCheckingChat = true;
 
     public static String getHost() {
@@ -54,6 +55,14 @@ public class ServerData {
 
     public static void setEndServerMessage(String endServerMessage) {
         ServerData.endServerMessage = endServerMessage;
+    }
+
+    public static String getWelcomeServerMessage() {
+        return welcomeServerMessage;
+    }
+
+    public static void setWelcomeServerMessage(String startServerMessage) {
+        ServerData.welcomeServerMessage = startServerMessage;
     }
 
     public static boolean isCheckingChat() {

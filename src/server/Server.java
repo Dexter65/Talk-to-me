@@ -12,12 +12,13 @@ public class Server {
     public Server() {
         try {
             serverSocket = new ServerSocket(ServerData.getPort());
-            ServerData.messageViewer.viewMessage("Host: " + ServerData.getHost() + "\nPort: " + ServerData.getPort());
+            ServerData.messageViewer.viewMessage("Host: " + ServerData.getHost());
+            ServerData.messageViewer.viewMessage("Port: " + ServerData.getPort());
             ServerData.messageViewer.viewMessage(ServerData.getStartServerMessage());
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                sendMessageToChat(new Message("Новый участник присоединился к чату"));
+                sendMessageToChat(new Message(ServerData.getWelcomeServerMessage()));
 
                 ClientHandler clientHandler = new ClientHandler(clientSocket, this);
                 ServerData.clients.add(clientHandler);

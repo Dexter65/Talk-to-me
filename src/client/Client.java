@@ -56,19 +56,19 @@ public class Client {
         this.serverHost = serverHost;
         this.serverPort = serverPort;
 
-        userMessageViewer.viewMessage(new Message(1, "Клиент", "Введите ваше имя"));
+        userMessageViewer.viewMessage(new Message(1, "Client", "Please, enter your name: "));
 //        clientName = in.nextLine();
         clientName = userMessageInput.getNextLine();
-        userMessageViewer.viewMessage(new Message(1, "Клиент",
-                "Ваше имя установлено: " + clientName));
+        userMessageViewer.viewMessage(new Message(1, "Client",
+                "Your name has been set: " + clientName));
 
         try {
             clientSocket = new Socket(this.serverHost, this.serverPort);
             messageOut = new PrintWriter(clientSocket.getOutputStream());
             messageInput = new Scanner(clientSocket.getInputStream());
 
-            userMessageViewer.viewMessage(new Message(1, "Клиент",
-                    "Соединение с сервером успешно установлено"));
+            userMessageViewer.viewMessage(new Message(1, "Client",
+                    "Server connection successfully established."));
 
             new Thread() {
                 @Override
@@ -78,7 +78,6 @@ public class Client {
             }.start();
 
             while (true) {
-//                sendMessage(new Message(200, clientName, in.nextLine()));
                 sendMessage(new Message(200, clientName, userMessageInput.getNextLine()));
             }
 
