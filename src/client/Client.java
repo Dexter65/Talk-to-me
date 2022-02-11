@@ -1,6 +1,6 @@
 package client;
 
-import messages.ConsoleMessageViewer;
+import messages.IMessageInput;
 import messages.IMessageViewer;
 import messages.Message;
 import org.json.simple.JSONObject;
@@ -17,11 +17,17 @@ import java.util.Scanner;
  * of client's logic.
  */
 public class Client {
-    private final IMessageViewer messageViewer = ConsoleMessageViewer.consoleMessageViewer;
+    //private final IMessageViewer messageViewer = ConsoleMessageViewer.consoleMessageViewer;
+//    private final IMessageViewer messageViewer = UIMessageViewer.uiMessageViewer;
+//    private final IMessageViewer messageViewer = MainWindowController.getMainWindowController();
+    private final IMessageViewer userMessageViewer;
+//    private Scanner in = new Scanner(System.in);
+//    private IMessageInput in = ConsoleMessageInput.consoleMessageInput;
+    private final IMessageInput userMessageInput;
+
     private final String serverHost;
     private final int serverPort;
     private Socket clientSocket;
-    private Scanner in = new Scanner(System.in);
     private final String clientName;
 
     private PrintWriter messageOut;
@@ -39,20 +45,30 @@ public class Client {
      * </p>
      * @param serverHost String host to connect to the server.
      * @param serverPort int port to connect to the server.
+     * @param userMessageViewer instance of {@link IMessageViewer IMessageViewer}
+                            its the method that will be used to
+                            display the messages.
      */
-    public Client(String serverHost, int serverPort) {
+    public Client(String serverHost, int serverPort,
+                  IMessageViewer userMessageViewer, IMessageInput userMessageInput) {
+        this.userMessageInput = userMessageInput;
+        this.userMessageViewer = userMessageViewer;
         this.serverHost = serverHost;
         this.serverPort = serverPort;
 
-        messageViewer.viewMessage(new Message(1, "Клиент", "Введите ваше имя"));
-        clientName = in.nextLine();
+        userMessageViewer.viewMessage(new Message(1, "Клиент", "Введите ваше имя"));
+//        clientName = in.nextLine();
+        clientName = userMessageInput.getNextLine();
+        userMessageViewer.viewMessage(new Message(1, "Клиент",
+                "Ваше имя установлено: " + clientName));
 
         try {
             clientSocket = new Socket(this.serverHost, this.serverPort);
             messageOut = new PrintWriter(clientSocket.getOutputStream());
             messageInput = new Scanner(clientSocket.getInputStream());
 
-            messageViewer.viewMessage(new Message(1, "Клиент", "Соединение с сервером успешно установлено"));
+            userMessageViewer.viewMessage(new Message(1, "Клиент",
+                    "Соединение с сервером успешно установлено"));
 
             new Thread() {
                 @Override
@@ -62,7 +78,8 @@ public class Client {
             }.start();
 
             while (true) {
-                sendMessage(new Message(200, clientName, in.nextLine()));
+//                sendMessage(new Message(200, clientName, in.nextLine()));
+                sendMessage(new Message(200, clientName, userMessageInput.getNextLine()));
             }
 
         } catch (IOException e) {
@@ -97,7 +114,7 @@ public class Client {
             if (messageInput.hasNext()) {
                 try {
                     Message message = JSONMessageParser.getMessageFromJSON(messageInput.nextLine());
-                    messageViewer.viewMessage(message);
+                    userMessageViewer.viewMessage(message);
 
                 } catch (ParseException e) {
                     e.printStackTrace();

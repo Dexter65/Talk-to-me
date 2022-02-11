@@ -1,4 +1,7 @@
-package messages;
+package messages.console;
+
+import messages.IMessageViewer;
+import messages.Message;
 
 public class ConsoleMessageViewer implements IMessageViewer {
     public static final ConsoleMessageViewer consoleMessageViewer = new ConsoleMessageViewer();

@@ -1,6 +1,6 @@
 package server;
 
-import messages.ConsoleMessageViewer;
+import messages.console.ConsoleMessageViewer;
 import messages.IMessageViewer;
 
 import java.util.ArrayList;
